@@ -1,0 +1,21 @@
+import 'package:dudu/cubit/cubit.dart';
+import 'package:dudu/models/models.dart';
+import 'package:dudu/shared/shared.dart';
+import 'package:dudu/ui/pages/pages.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:supercharged/supercharged.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+part 'custom_navigation_bar.dart';
+part 'rating_stars.dart';
+part 'talent_card.dart';
+part 'video_calls_card.dart';
+part 'selectable_box.dart';
+part 'custom_tabbar.dart';
+part 'order_list_item.dart';
