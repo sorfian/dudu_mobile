@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:dudu/models/models.dart';
 import 'package:dudu/services/services.dart';
@@ -19,9 +21,11 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     }
   }
 
-  Future<String?> submitTransaction(UserTransaction transaction) async {
+  Future<String?> submitTransaction(UserTransaction transaction,
+      {File? videoFile, File? videoThumbnail}) async {
     ApiReturnValue<UserTransaction> result =
-        await UserTransactionServices.submitTransaction(transaction);
+        await UserTransactionServices.submitTransaction(transaction,
+            videoFile: videoFile, videoThumbnail: videoThumbnail);
 
     if (result.value != null) {
       emit(UserTransactionLoaded(

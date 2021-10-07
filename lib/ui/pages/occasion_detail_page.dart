@@ -15,8 +15,8 @@ class OccasionDetailPage extends StatefulWidget {
 class _OccasionDetailPageState extends State<OccasionDetailPage> {
   TextEditingController occasionController = TextEditingController();
   TextEditingController instructionController = TextEditingController();
+  File? videoThumbnail;
   File? videoFile;
-  File? video;
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +227,7 @@ class _OccasionDetailPageState extends State<OccasionDetailPage> {
                         child: ClipRRect(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
-                          child: (videoFile != null)
+                          child: (videoThumbnail != null)
                               ? Container(
                                   margin: const EdgeInsets.all(10),
                                   width:
@@ -236,7 +236,7 @@ class _OccasionDetailPageState extends State<OccasionDetailPage> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
-                                        image: FileImage(videoFile!),
+                                        image: FileImage(videoThumbnail!),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -266,7 +266,7 @@ class _OccasionDetailPageState extends State<OccasionDetailPage> {
                             .pickVideo(source: ImageSource.gallery);
 
                         if (pickedFile != null) {
-                          video = File(pickedFile.path);
+                          videoFile = File(pickedFile.path);
                           final fileName = await VideoThumbnail.thumbnailFile(
                             video: pickedFile.path,
                             imageFormat: ImageFormat.JPEG,
@@ -275,7 +275,7 @@ class _OccasionDetailPageState extends State<OccasionDetailPage> {
                                 128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
                             quality: 25,
                           );
-                          videoFile = File(fileName!);
+                          videoThumbnail = File(fileName!);
                           // print(videoFile);
                           // print(video);
 
@@ -318,7 +318,8 @@ class _OccasionDetailPageState extends State<OccasionDetailPage> {
                             moment: widget.moment,
                             occasion: occasionController.text,
                             instruction: instructionController.text,
-                            videoFile: video,
+                            videoFile: videoFile,
+                            videoThumbnail: videoThumbnail,
                           ),
                         );
                       },

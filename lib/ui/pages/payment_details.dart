@@ -7,16 +7,18 @@ class PaymentPage extends StatefulWidget {
   final String? occasion;
   final String? instruction;
   final File? videoFile;
+  final File? videoThumbnail;
 
-  const PaymentPage(
-      {Key? key,
-      this.userTransaction,
-      this.onBackButtonPressed,
-      this.occasion,
-      this.moment,
-      this.instruction,
-      this.videoFile})
-      : super(key: key);
+  const PaymentPage({
+    Key? key,
+    this.userTransaction,
+    this.onBackButtonPressed,
+    this.occasion,
+    this.moment,
+    this.instruction,
+    this.videoFile,
+    this.videoThumbnail,
+  }) : super(key: key);
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -28,6 +30,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     print(widget.videoFile);
+    print(widget.videoThumbnail);
     return GeneralPage(
       title: 'Payment Details',
       onBackButtonPressed: () {
@@ -241,14 +244,16 @@ class _PaymentPageState extends State<PaymentPage> {
                                 .read<UserTransactionsCubit>()
                                 .submitTransaction(
                                     widget.userTransaction!.copyWith(
-                                  date: DateTime.now(),
-                                  total:
-                                      widget.userTransaction!.talent_id!.price,
-                                  name: widget.userTransaction!.user!.name,
-                                  moment: widget.moment,
-                                  occasion: widget.occasion,
-                                  instruction: widget.instruction,
-                                ));
+                                        date: DateTime.now(),
+                                        total: widget
+                                            .userTransaction!.talent_id!.price,
+                                        name:
+                                            widget.userTransaction!.user!.name,
+                                        moment: widget.moment,
+                                        occasion: widget.occasion,
+                                        instruction: widget.instruction),
+                                    videoFile: widget.videoFile,
+                                    videoThumbnail: widget.videoThumbnail);
 
                             if (paymentURL != null) {
                               Get.to(() =>

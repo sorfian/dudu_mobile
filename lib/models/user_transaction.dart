@@ -18,6 +18,8 @@ class UserTransaction extends Equatable {
   final String? detail;
   final User? user;
   final DateTime? date;
+  final String? videoPath;
+  final String? videoThumbnail;
 
   UserTransaction({
     this.id,
@@ -35,6 +37,8 @@ class UserTransaction extends Equatable {
     this.detail,
     this.user,
     this.date,
+    this.videoPath,
+    this.videoThumbnail,
   });
 
   UserTransaction copyWith({
@@ -53,6 +57,8 @@ class UserTransaction extends Equatable {
     String? detail,
     User? user,
     DateTime? date,
+    String? videoPath,
+    String? videoThumbnail,
   }) {
     return UserTransaction(
       id: id ?? this.id,
@@ -70,6 +76,8 @@ class UserTransaction extends Equatable {
       detail: detail ?? this.detail,
       user: user ?? this.user,
       date: date ?? this.date,
+      videoPath: videoPath ?? this.videoPath,
+      videoThumbnail: videoThumbnail ?? this.videoThumbnail,
     );
   }
 
@@ -95,7 +103,9 @@ class UserTransaction extends Equatable {
                   : (data['status'] == 'CANCELLED')
                       ? UserTransactionStatus.cancelled
                       : UserTransactionStatus.on_process,
-          payment_url: data['payment_url']);
+          payment_url: data['payment_url'],
+          videoPath: data['video_path'],
+          videoThumbnail: data['video_thumbnail']);
 
   @override
   List<Object?> get props => [
@@ -114,6 +124,8 @@ class UserTransaction extends Equatable {
         detail,
         user,
         date,
+        videoPath,
+        videoThumbnail,
       ];
 }
 
