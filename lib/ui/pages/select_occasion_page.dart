@@ -3,8 +3,12 @@ part of 'pages.dart';
 class SelectOccasionPage extends StatefulWidget {
   final Function? onBackButtonPressed;
   final UserTransaction? userTransaction;
+  final String? profilePicture;
   const SelectOccasionPage(
-      {Key? key, this.onBackButtonPressed, this.userTransaction})
+      {Key? key,
+      this.onBackButtonPressed,
+      this.userTransaction,
+      this.profilePicture})
       : super(key: key);
 
   @override
@@ -57,18 +61,37 @@ class _SelectOccasionPageState extends State<SelectOccasionPage> {
                 ),
                 Align(
                   alignment: Alignment.bottomLeft,
-                  child: Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: "#CF2968".toColor(),
-                    ),
-                    child: const Icon(
-                      MdiIcons.plus,
-                      color: Colors.white,
-                      size: 30,
-                    ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(() => SelectUserPage(
+                            userTransaction: widget.userTransaction,
+                          ));
+                    },
+                    child: (widget.profilePicture != null)
+                        ? Container(
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(widget.profilePicture!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: "#CF2968".toColor(),
+                            ),
+                            child: const Icon(
+                              MdiIcons.plus,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -113,6 +136,7 @@ class _SelectOccasionPageState extends State<SelectOccasionPage> {
                   Get.to(() => OccasionDetailPage(
                         userTransaction: widget.userTransaction,
                         moment: numberOfOccasions[i][index],
+                        profilePicture: widget.profilePicture,
                       ));
                 },
               ),

@@ -4,8 +4,14 @@ class OccasionDetailPage extends StatefulWidget {
   final Function? onBackButtonPressed;
   final UserTransaction? userTransaction;
   final String? moment;
+  final String? profilePicture;
+
   const OccasionDetailPage(
-      {Key? key, this.onBackButtonPressed, this.userTransaction, this.moment})
+      {Key? key,
+      this.onBackButtonPressed,
+      this.userTransaction,
+      this.moment,
+      this.profilePicture})
       : super(key: key);
 
   @override
@@ -65,19 +71,31 @@ class _OccasionDetailPageState extends State<OccasionDetailPage> {
                 ),
                 Align(
                   alignment: Alignment.bottomLeft,
-                  child: Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: "#CF2968".toColor(),
-                    ),
-                    child: const Icon(
-                      MdiIcons.plus,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
+                  child: (widget.profilePicture != null)
+                      ? Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage(widget.profilePicture!),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: "#CF2968".toColor(),
+                          ),
+                          child: const Icon(
+                            MdiIcons.plus,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
                 ),
               ],
             ),
