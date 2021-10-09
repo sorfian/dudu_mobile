@@ -63,14 +63,10 @@ class UserTransactionServices {
       ApiReturnValue<String> result = await uploadVideoFile(
           videoFile, videoThumbnail, data['data']['external_id']);
       if (result.videoFile != null) {
-        value = value.copyWith(
-            videoPath:
-                "https://staging.dudu.co.id/storage/" + result.videoFile!);
+        value = value.copyWith(videoPath: result.videoFile!);
       }
       if (result.videoThumbnail != null) {
-        value = value.copyWith(
-            videoThumbnail:
-                "https://staging.dudu.co.id/storage/" + result.videoThumbnail!);
+        value = value.copyWith(videoThumbnail: result.videoThumbnail!);
       }
     }
 

@@ -20,6 +20,7 @@ class UserTransaction extends Equatable {
   final DateTime? date;
   final String? videoPath;
   final String? videoThumbnail;
+  final String? externalId;
 
   UserTransaction({
     this.id,
@@ -39,6 +40,7 @@ class UserTransaction extends Equatable {
     this.date,
     this.videoPath,
     this.videoThumbnail,
+    this.externalId,
   });
 
   UserTransaction copyWith({
@@ -59,6 +61,7 @@ class UserTransaction extends Equatable {
     DateTime? date,
     String? videoPath,
     String? videoThumbnail,
+    String? externalId,
   }) {
     return UserTransaction(
       id: id ?? this.id,
@@ -78,34 +81,37 @@ class UserTransaction extends Equatable {
       date: date ?? this.date,
       videoPath: videoPath ?? this.videoPath,
       videoThumbnail: videoThumbnail ?? this.videoThumbnail,
+      externalId: externalId ?? this.externalId,
     );
   }
 
   factory UserTransaction.fromJson(Map<String, dynamic> data) =>
       UserTransaction(
-          id: data['id'],
-          // user: User.fromJson(data['user']),
-          talent_id: Talent.fromJson(data['talent']),
-          total: data['total'],
-          name: data['name'],
-          moment: data['moment'],
-          // birthday_date:
-          //     DateTime.fromMillisecondsSinceEpoch(data['birthday_date']),
-          date: DateTime.fromMillisecondsSinceEpoch(data['created_at'] * 1000),
-          // age: data['age'],
-          occasion: data['occasion'],
-          instruction: data['instruction'],
-          // detail: data['detail'],
-          status: (data['status'] == 'PENDING')
-              ? UserTransactionStatus.pending
-              : (data['status'] == 'SUCCESS')
-                  ? UserTransactionStatus.success
-                  : (data['status'] == 'CANCELLED')
-                      ? UserTransactionStatus.cancelled
-                      : UserTransactionStatus.on_process,
-          payment_url: data['payment_url'],
-          videoPath: data['video_path'],
-          videoThumbnail: data['video_thumbnail']);
+        id: data['id'],
+        // user: User.fromJson(data['user']),
+        talent_id: Talent.fromJson(data['talent']),
+        total: data['total'],
+        name: data['name'],
+        moment: data['moment'],
+        // birthday_date:
+        //     DateTime.fromMillisecondsSinceEpoch(data['birthday_date']),
+        date: DateTime.fromMillisecondsSinceEpoch(data['created_at'] * 1000),
+        // age: data['age'],
+        occasion: data['occasion'],
+        instruction: data['instruction'],
+        // detail: data['detail'],
+        status: (data['status'] == 'PENDING')
+            ? UserTransactionStatus.pending
+            : (data['status'] == 'SUCCESS')
+                ? UserTransactionStatus.success
+                : (data['status'] == 'CANCELLED')
+                    ? UserTransactionStatus.cancelled
+                    : UserTransactionStatus.on_process,
+        payment_url: data['payment_url'],
+        videoPath: data['video_file'],
+        videoThumbnail: data['video_thumbnail'],
+        externalId: data['external_id'],
+      );
 
   @override
   List<Object?> get props => [

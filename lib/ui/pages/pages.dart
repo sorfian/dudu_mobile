@@ -22,6 +22,7 @@ import 'package:supercharged/supercharged.dart';
 import 'package:dudu/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 part 'general_page.dart';
@@ -43,3 +44,5 @@ part 'profile_page.dart';
 part 'payment_method_page.dart';
 part 'payment_details.dart';
 part 'select_user_page.dart';
+part 'order_details_page.dart';
+part 'talent_video_page.dart';

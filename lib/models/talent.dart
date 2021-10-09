@@ -32,7 +32,7 @@ class Talent extends Equatable {
         id: data['id'],
         user_id: data['user_id'],
         user: (data['user'] != null) ? User.fromJson(data['user']) : User(),
-        name: (data['name'] != null) ? data['name'] : "",
+        name: (data['talent_name'] != null) ? data['talent_name'] : "",
         description: data['description'],
         picture_path:
             "https://staging.dudu.co.id/storage/" + data['picture_path'],

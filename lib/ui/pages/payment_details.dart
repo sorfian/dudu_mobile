@@ -193,37 +193,169 @@ class _PaymentPageState extends State<PaymentPage> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 24,
                         ),
-                        Text("Delivery Info", style: whiteFontStyle),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16, bottom: 8),
+                          child: Text(
+                            'Details Transaction:',
+                            style: whiteFontStyl3,
+                          ),
+                        ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              height: 20,
-                              width: 20,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: defaultMargin),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.transparent,
-                                border: Border.all(
-                                    color: Color(0xffBB1556), width: 5),
-                              ),
-                            ),
-                            Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
                                 child: Text(
-                                    NumberFormat.currency(
-                                            locale: 'id-ID',
-                                            symbol: 'Rp. ',
-                                            decimalDigits: 0)
-                                        .format(widget.userTransaction!
-                                            .talent_id!.price!),
-                                    style: whiteFontStyle2))
+                                  widget.userTransaction!.talent_id!.name!,
+                                  style: greyFontStyle,
+                                )),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  NumberFormat.currency(
+                                          locale: 'id-ID',
+                                          symbol: 'IDR ',
+                                          decimalDigits: 0)
+                                      .format(widget
+                                          .userTransaction!.talent_id!.price),
+                                  style: whiteFontStyl3,
+                                  textAlign: TextAlign.right,
+                                ))
                           ],
-                        )
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  'Fee',
+                                  style: greyFontStyle,
+                                )),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  NumberFormat.currency(
+                                          locale: 'id-ID',
+                                          symbol: 'IDR ',
+                                          decimalDigits: 0)
+                                      .format(50000),
+                                  style: whiteFontStyl3,
+                                  textAlign: TextAlign.right,
+                                ))
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  'Tax 10%',
+                                  style: greyFontStyle,
+                                )),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  NumberFormat.currency(
+                                          locale: 'id-ID',
+                                          symbol: 'IDR ',
+                                          decimalDigits: 0)
+                                      .format(widget.userTransaction!.talent_id!
+                                              .price! *
+                                          0.1),
+                                  style: whiteFontStyl3,
+                                  textAlign: TextAlign.right,
+                                ))
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  'Total',
+                                  style: greyFontStyle,
+                                )),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2 -
+                                    defaultMargin -
+                                    5,
+                                child: Text(
+                                  NumberFormat.currency(
+                                          locale: 'id-ID',
+                                          symbol: 'IDR ',
+                                          decimalDigits: 0)
+                                      .format(widget.userTransaction!.talent_id!
+                                                  .price! *
+                                              1.1 +
+                                          50000),
+                                  style: whiteFontStyl3.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: '1ABC9C'.toColor()),
+                                  textAlign: TextAlign.right,
+                                ))
+                          ],
+                        ),
+                        // Text("Delivery Info", style: whiteFontStyle),
+                        // Row(
+                        //   children: [
+                        //     Container(
+                        //       height: 20,
+                        //       width: 20,
+                        //       margin: const EdgeInsets.symmetric(
+                        //           vertical: defaultMargin),
+                        //       decoration: BoxDecoration(
+                        //         shape: BoxShape.circle,
+                        //         color: Colors.transparent,
+                        //         border: Border.all(
+                        //             color: Color(0xffBB1556), width: 5),
+                        //       ),
+                        //     ),
+                        //     Container(
+                        //         margin:
+                        //             const EdgeInsets.symmetric(horizontal: 10),
+                        //         child: Text(
+                        //             NumberFormat.currency(
+                        //                     locale: 'id-ID',
+                        //                     symbol: 'Rp. ',
+                        //                     decimalDigits: 0)
+                        //                 .format(widget.userTransaction!
+                        //                     .talent_id!.price!),
+                        //             style: whiteFontStyle2))
+                        //   ],
+                        // )
                       ],
                     ),
                   ),
@@ -245,8 +377,11 @@ class _PaymentPageState extends State<PaymentPage> {
                                 .submitTransaction(
                                     widget.userTransaction!.copyWith(
                                         date: DateTime.now(),
-                                        total: widget
-                                            .userTransaction!.talent_id!.price,
+                                        total: (widget.userTransaction!
+                                                        .talent_id!.price! *
+                                                    1.1 +
+                                                50000)
+                                            .toInt(),
                                         name:
                                             widget.userTransaction!.user!.name,
                                         moment: widget.moment,
@@ -299,8 +434,10 @@ class _PaymentPageState extends State<PaymentPage> {
                                             locale: 'id-ID',
                                             symbol: 'Rp. ',
                                             decimalDigits: 0)
-                                        .format(widget
-                                            .userTransaction!.talent_id!.price),
+                                        .format(widget.userTransaction!
+                                                    .talent_id!.price! *
+                                                1.1 +
+                                            50000),
                                 style: whiteFontStyle2.copyWith(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -308,6 +445,9 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                         ),
                       ),
+                const SizedBox(
+                  height: 60,
+                ),
               ],
             ),
           ],

@@ -101,11 +101,16 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                             left: defaultMargin,
                                             bottom: 16),
                                         child: GestureDetector(
-                                          onTap: () async {
-                                            if (e.status ==
-                                                UserTransactionStatus.pending) {
-                                              await launch(e.payment_url!);
-                                            }
+                                          // onTap: () async {
+                                          //   if (e.status ==
+                                          //       UserTransactionStatus.pending) {
+                                          //     await launch(e.payment_url!);
+                                          //   }
+                                          // },
+                                          onTap: () {
+                                            Get.to(() => OrderDetailsPage(
+                                                  userTransaction: e,
+                                                ));
                                           },
                                           child: OrderListItem(
                                             itemWidth: listItemWidth,
