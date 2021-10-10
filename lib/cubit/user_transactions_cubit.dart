@@ -37,6 +37,20 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     }
   }
 
+  Future<UserTransactionStatus?> updateTransaction(
+      UserTransaction transaction) async {
+    ApiReturnValue<UserTransaction> result =
+        await UserTransactionServices.updateTransaction(transaction);
+
+    if (result.value != null) {
+      emit(UserTransactionLoaded(
+          (state as UserTransactionLoaded).transactions + [result.value!]));
+      return result.value!.status!;
+    } else {
+      return null;
+    }
+  }
+
   Future<String?> uploadTalentVideo(UserTransaction transaction,
       {File? videoFile, File? videoThumbnail}) async {
     ApiReturnValue<String> result =

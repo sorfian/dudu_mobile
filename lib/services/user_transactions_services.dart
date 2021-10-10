@@ -76,6 +76,38 @@ class UserTransactionServices {
     return ApiReturnValue(value: value);
   }
 
+  static Future<ApiReturnValue<UserTransaction>> updateTransaction(
+      UserTransaction userTransaction,
+      {http.Client? client}) async {
+    client ??= http.Client();
+
+    String url = baseURL + 'user/status/update';
+    var uri = Uri.parse(url);
+
+    var response = await client.post(uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${User.token}"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "external_id": userTransaction.externalId,
+          "status": "SUCCESS",
+        }));
+
+    if (response.statusCode != 200) {
+      return ApiReturnValue(message: 'Please try again');
+    }
+
+    var data = jsonDecode(response.body);
+    var status = (data['data']['status'] == 'SUCCESS')
+        ? UserTransactionStatus.success
+        : UserTransactionStatus.on_process;
+
+    UserTransaction value = userTransaction.copyWith(status: status);
+
+    return ApiReturnValue(value: value);
+  }
+
   static Future<ApiReturnValue<String>> uploadVideoFile(
       File videoFile, File videoThumbnail, String externalId,
       {http.MultipartRequest? request}) async {

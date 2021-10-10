@@ -11,6 +11,8 @@ class TalentVideoPage extends StatefulWidget {
 class _TalentVideoPageState extends State<TalentVideoPage> {
   VideoPlayerController? _controller;
   bool isLoading = false;
+  bool isLoadingComplain = false;
+  UserTransactionStatus? status;
 
   @override
   void initState() {
@@ -23,11 +25,14 @@ class _TalentVideoPageState extends State<TalentVideoPage> {
           setState(() {});
         });
     }
+    status = widget.userTransaction!.status;
   }
 
   @override
   Widget build(BuildContext context) {
     String role = (context.read<UserCubit>().state as UserLoaded).user.role!;
+    var userStatus = widget.userTransaction!.status;
+    print(userStatus);
     return GeneralPage(
       title: 'Talent Video',
       subtitle: 'Video already delivered',
@@ -94,109 +99,160 @@ class _TalentVideoPageState extends State<TalentVideoPage> {
               ? const SizedBox()
               : Column(
                   children: [
-                    Container(
-                      margin:
-                          const EdgeInsets.symmetric(horizontal: defaultMargin),
-                      height: 45,
-                      width: double.infinity,
-                      child: GestureDetector(
-                        onTap: () async {
-                          // setState(() {
-                          //   isLoading = true;
-                          // });
+                    (isLoading)
+                        ? Center(
+                            child: loadingIndicator,
+                          )
+                        : Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: defaultMargin),
+                            height: 45,
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: (status == UserTransactionStatus.success)
+                                  ? () {}
+                                  : () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
 
-                          String? paymentURL =
-                              widget.userTransaction!.payment_url;
+                                      UserTransactionStatus? statusSuccess =
+                                          await context
+                                              .read<UserTransactionsCubit>()
+                                              .updateTransaction(
+                                                widget.userTransaction!,
+                                              );
 
-                          if (paymentURL != null) {
-                            await launch(paymentURL);
-                          } else {
-                            setState(() {
-                              isLoading = false;
-                            });
+                                      if (statusSuccess ==
+                                          UserTransactionStatus.success) {
+                                        Get.snackbar(
+                                          "",
+                                          "",
+                                          backgroundColor: "11698E".toColor(),
+                                          icon: const Icon(
+                                              MdiIcons.closeCircleOutline,
+                                              color: Colors.white),
+                                          titleText: Text(
+                                            'Transaction Finished',
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          messageText: Text(
+                                            'Thank you! Your order is completed.',
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white),
+                                          ),
+                                        );
 
-                            Get.snackbar(
-                              "",
-                              "",
-                              backgroundColor: "D9435E".toColor(),
-                              icon: const Icon(MdiIcons.closeCircleOutline,
-                                  color: Colors.white),
-                              titleText: Text(
-                                'Transaction Failed',
-                                style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                        setState(() {
+                                          isLoading = false;
+                                          status = statusSuccess;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+
+                                        Get.snackbar(
+                                          "",
+                                          "",
+                                          backgroundColor: "D9435E".toColor(),
+                                          icon: const Icon(
+                                              MdiIcons.closeCircleOutline,
+                                              color: Colors.white),
+                                          titleText: Text(
+                                            'Transaction Failed',
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          messageText: Text(
+                                            'Please try again later.',
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white),
+                                          ),
+                                        );
+                                      }
+                                    },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: defaultMargin),
+                                width: MediaQuery.of(context).size.width,
+                                height: 50,
+                                decoration: (status ==
+                                        UserTransactionStatus.success)
+                                    ? BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: greyColor,
+                                      )
+                                    : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            Color(0xff610A76),
+                                            Color(0xffFF0000)
+                                          ],
+                                          begin: FractionalOffset.topLeft,
+                                          end: FractionalOffset.bottomRight,
+                                        ),
+                                      ),
+                                child: Center(
+                                  child: Text(
+                                    (status == UserTransactionStatus.success)
+                                        ? "Finished"
+                                        : "Finish Order",
+                                    style: whiteFontStyl3.copyWith(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
-                              messageText: Text(
-                                'Please try again later.',
-                                style: GoogleFonts.poppins(color: Colors.white),
-                              ),
-                            );
-                          }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: defaultMargin),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xff610A76), Color(0xffFF0000)],
-                              begin: FractionalOffset.topLeft,
-                              end: FractionalOffset.bottomRight,
                             ),
                           ),
-                          child: Center(
-                            child: Text(
-                              "Finish Order",
-                              style: whiteFontStyl3.copyWith(
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     Container(
                       margin: const EdgeInsets.symmetric(
                           horizontal: defaultMargin, vertical: defaultMargin),
                       height: 45,
                       width: double.infinity,
                       child: GestureDetector(
-                        onTap: () async {
-                          // setState(() {
-                          //   isLoading = true;
-                          // });
+                        onTap: (status == UserTransactionStatus.success)
+                            ? () {}
+                            : () async {
+                                setState(() {
+                                  isLoadingComplain = true;
+                                });
 
-                          String? paymentURL =
-                              widget.userTransaction!.payment_url;
+                                String? paymentURL =
+                                    widget.userTransaction!.payment_url;
 
-                          if (paymentURL != null) {
-                            await launch(paymentURL);
-                          } else {
-                            setState(() {
-                              isLoading = false;
-                            });
+                                if (paymentURL != null) {
+                                  await launch(paymentURL);
+                                } else {
+                                  setState(() {
+                                    isLoadingComplain = false;
+                                  });
 
-                            Get.snackbar(
-                              "",
-                              "",
-                              backgroundColor: "D9435E".toColor(),
-                              icon: const Icon(MdiIcons.closeCircleOutline,
-                                  color: Colors.white),
-                              titleText: Text(
-                                'Transaction Failed',
-                                style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              messageText: Text(
-                                'Please try again later.',
-                                style: GoogleFonts.poppins(color: Colors.white),
-                              ),
-                            );
-                          }
-                        },
+                                  Get.snackbar(
+                                    "",
+                                    "",
+                                    backgroundColor: "D9435E".toColor(),
+                                    icon: const Icon(
+                                        MdiIcons.closeCircleOutline,
+                                        color: Colors.white),
+                                    titleText: Text(
+                                      'Transaction Failed',
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    messageText: Text(
+                                      'Please try again later.',
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white),
+                                    ),
+                                  );
+                                }
+                              },
                         child: Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: defaultMargin),
@@ -204,11 +260,15 @@ class _TalentVideoPageState extends State<TalentVideoPage> {
                           height: 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: orangeColor,
+                            color: (status == UserTransactionStatus.success)
+                                ? greyColor
+                                : orangeColor,
                           ),
                           child: Center(
                             child: Text(
-                              "Complain",
+                              (status == UserTransactionStatus.success)
+                                  ? "No Complain"
+                                  : "Complain",
                               style: whiteFontStyl3.copyWith(
                                   fontWeight: FontWeight.bold),
                             ),
