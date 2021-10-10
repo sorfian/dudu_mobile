@@ -64,6 +64,7 @@ class User extends Equatable {
         city: data['city'],
         description: data['description'],
         is_active: data['is_active'],
+        role: data['role'],
       );
 
   User copyWith({

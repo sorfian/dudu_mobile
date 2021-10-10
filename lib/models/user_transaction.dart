@@ -1,6 +1,13 @@
 part of 'models.dart';
 
-enum UserTransactionStatus { on_process, success, pending, cancelled }
+enum UserTransactionStatus {
+  on_process,
+  success,
+  pending,
+  cancelled,
+  paid,
+  delivered
+}
 
 class UserTransaction extends Equatable {
   final int? id;
@@ -20,6 +27,8 @@ class UserTransaction extends Equatable {
   final DateTime? date;
   final String? videoPath;
   final String? videoThumbnail;
+  final String? videoPathTalent;
+  final String? videoThumbnailTalent;
   final String? externalId;
 
   UserTransaction({
@@ -41,6 +50,8 @@ class UserTransaction extends Equatable {
     this.videoPath,
     this.videoThumbnail,
     this.externalId,
+    this.videoPathTalent,
+    this.videoThumbnailTalent,
   });
 
   UserTransaction copyWith({
@@ -62,6 +73,8 @@ class UserTransaction extends Equatable {
     String? videoPath,
     String? videoThumbnail,
     String? externalId,
+    String? videoPathTalent,
+    String? videoThumbnailTalent,
   }) {
     return UserTransaction(
       id: id ?? this.id,
@@ -82,13 +95,15 @@ class UserTransaction extends Equatable {
       videoPath: videoPath ?? this.videoPath,
       videoThumbnail: videoThumbnail ?? this.videoThumbnail,
       externalId: externalId ?? this.externalId,
+      videoPathTalent: videoPathTalent ?? this.videoPathTalent,
+      videoThumbnailTalent: videoThumbnailTalent ?? this.videoThumbnailTalent,
     );
   }
 
   factory UserTransaction.fromJson(Map<String, dynamic> data) =>
       UserTransaction(
         id: data['id'],
-        // user: User.fromJson(data['user']),
+        user: User.fromJson(data['user']),
         talent_id: Talent.fromJson(data['talent']),
         total: data['total'],
         name: data['name'],
@@ -102,15 +117,21 @@ class UserTransaction extends Equatable {
         // detail: data['detail'],
         status: (data['status'] == 'PENDING')
             ? UserTransactionStatus.pending
-            : (data['status'] == 'SUCCESS')
-                ? UserTransactionStatus.success
-                : (data['status'] == 'CANCELLED')
-                    ? UserTransactionStatus.cancelled
-                    : UserTransactionStatus.on_process,
+            : (data['status'] == 'PAID')
+                ? UserTransactionStatus.paid
+                : (data['status'] == 'DELIVERED')
+                    ? UserTransactionStatus.delivered
+                    : (data['status'] == 'SUCCESS')
+                        ? UserTransactionStatus.success
+                        : (data['status'] == 'CANCELLED')
+                            ? UserTransactionStatus.cancelled
+                            : UserTransactionStatus.on_process,
         payment_url: data['payment_url'],
         videoPath: data['video_file'],
         videoThumbnail: data['video_thumbnail'],
         externalId: data['external_id'],
+        videoPathTalent: data['video_file_talent'],
+        videoThumbnailTalent: data['video_thumbnail_talent'],
       );
 
   @override

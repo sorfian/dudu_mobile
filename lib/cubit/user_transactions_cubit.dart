@@ -10,9 +10,10 @@ part 'user_transactions_state.dart';
 class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   UserTransactionsCubit() : super(UserTransactionsInitial());
 
-  Future<void> getUserTransactions() async {
+  Future<void> getUserTransactions({String? user}) async {
     ApiReturnValue<List<UserTransaction>> result =
-        await UserTransactionServices.getTransactions();
+        await UserTransactionServices.getTransactions(
+            user: (user != null) ? user : "");
 
     if (result.value != null) {
       emit(UserTransactionLoaded(result.value!));
@@ -31,6 +32,28 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
       emit(UserTransactionLoaded(
           (state as UserTransactionLoaded).transactions + [result.value!]));
       return result.value!.payment_url!;
+    } else {
+      return null;
+    }
+  }
+
+  Future<String?> uploadTalentVideo(UserTransaction transaction,
+      {File? videoFile, File? videoThumbnail}) async {
+    ApiReturnValue<String> result =
+        await UserTransactionServices.uploadVideoTalent(
+      videoFile!,
+      videoThumbnail!,
+      transaction.externalId!,
+      userTransaction: transaction,
+    );
+    transaction.copyWith(
+        videoPathTalent: result.videoFileTalent,
+        videoThumbnailTalent: result.videoThumbnailTalent);
+
+    if (result.videoFileTalent != null && result.videoThumbnailTalent != null) {
+      emit(
+          UserTransactionLoaded((state as UserTransactionLoaded).transactions));
+      return result.videoFileTalent!;
     } else {
       return null;
     }

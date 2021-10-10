@@ -2,10 +2,13 @@ part of 'services.dart';
 
 class UserTransactionServices {
   static Future<ApiReturnValue<List<UserTransaction>>> getTransactions(
-      {http.Client? client}) async {
+      {String? user, http.Client? client}) async {
     client ??= http.Client();
 
-    String url = baseURL + 'user/transaction/?limit=1000';
+    String url = baseURL +
+        ((user != null)
+            ? 'user/transaction/?limit=1000&talent_id=$user'
+            : 'user/transaction/?limit=1000');
     var uri = Uri.parse(url);
 
     var response = await client.get(uri, headers: {
@@ -98,39 +101,60 @@ class UserTransactionServices {
       String responseBody = await response.stream.bytesToString();
       var data = jsonDecode(responseBody);
 
-      String videoFile = data['data'][0];
-      String videoThumbnail = data['data'][1];
+      String? videoFile = data['data'][0];
+      String? videoThumbnail = data['data'][1];
 
       return ApiReturnValue(
-          videoFile: videoFile, videoThumbnail: videoThumbnail);
+        videoFile: videoFile,
+        videoThumbnail: videoThumbnail,
+      );
     } else {
       return ApiReturnValue(message: 'Uploading Profile Picture Failed');
     }
   }
 
-  static Future<ApiReturnValue<List<TransactionTalentDetails>>>
-      getTransactionTalentDetails({http.Client? client}) async {
-    client ??= http.Client();
-
-    String url = baseURL + 'user/transaction/?limit=1000';
+  static Future<ApiReturnValue<String>> uploadVideoTalent(
+      File videoFile, File videoThumbnail, String externalId,
+      {UserTransaction? userTransaction,
+      http.MultipartRequest? request}) async {
+    String url = baseURL + 'user/transaction/upload';
     var uri = Uri.parse(url);
 
-    var response = await client.get(uri, headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${User.token}"
-    });
+    request ??= http.MultipartRequest("POST", uri)
+      ..headers["Content-Type"] = "application/json"
+      ..headers["Authorization"] = "Bearer ${User.token}";
 
-    if (response.statusCode != 200) {
-      return ApiReturnValue(message: 'Please try again');
+    var multipartFileTalent =
+        await http.MultipartFile.fromPath('video_file_talent', videoFile.path);
+    var multipartThumbnailTalent = await http.MultipartFile.fromPath(
+        'video_thumbnail_talent', videoThumbnail.path);
+
+    request.fields.addAll({'external_id': externalId, 'status': 'DELIVERED'});
+    request.files.add(multipartFileTalent);
+    request.files.add(multipartThumbnailTalent);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      var data = jsonDecode(responseBody);
+
+      String? videoFileTalent = data['data'][2];
+      String? videoThumbnailTalent = data['data'][3];
+
+      if (data['data'][2] != null && data['data'][3] != null) {
+        userTransaction!.copyWith(
+          videoPathTalent: videoFileTalent,
+          videoThumbnailTalent: videoThumbnailTalent,
+        );
+      }
+
+      return ApiReturnValue(
+        videoFileTalent: videoFileTalent,
+        videoThumbnailTalent: videoThumbnailTalent,
+      );
+    } else {
+      return ApiReturnValue(message: 'Uploading Profile Picture Failed');
     }
-
-    var data = jsonDecode(response.body);
-
-    List<TransactionTalentDetails> transactions =
-        (data['data']['data'] as Iterable)
-            .map((e) => TransactionTalentDetails.fromJson(e))
-            .toList();
-
-    return ApiReturnValue(value: transactions);
   }
 }

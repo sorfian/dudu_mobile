@@ -27,6 +27,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    String role = (context.read<UserCubit>().state as UserLoaded).user.role!;
+    print(widget.userTransaction!.videoPathTalent);
     return GeneralPage(
       title: 'Order History',
       subtitle: 'Your order details',
@@ -118,7 +120,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             defaultMargin -
                             5,
                         child: Text(
-                          widget.userTransaction!.talent_id!.name!,
+                          (role == "TALENT")
+                              ? "Name"
+                              : widget.userTransaction!.talent_id!.name!,
                           style: greyFontStyle,
                         )),
                     SizedBox(
@@ -126,11 +130,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             defaultMargin -
                             5,
                         child: Text(
-                          NumberFormat.currency(
-                                  locale: 'id-ID',
-                                  symbol: 'IDR ',
-                                  decimalDigits: 0)
-                              .format(widget.userTransaction!.talent_id!.price),
+                          (role == "TALENT")
+                              ? widget.userTransaction!.user!.name!
+                              : NumberFormat.currency(
+                                      locale: 'id-ID',
+                                      symbol: 'IDR ',
+                                      decimalDigits: 0)
+                                  .format(
+                                      widget.userTransaction!.talent_id!.price),
                           style: whiteFontStyl3,
                           textAlign: TextAlign.right,
                         ))
@@ -148,7 +155,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             defaultMargin -
                             5,
                         child: Text(
-                          'Fee',
+                          (role == "TALENT") ? "Email" : 'Fee',
                           style: greyFontStyle,
                         )),
                     SizedBox(
@@ -156,11 +163,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             defaultMargin -
                             5,
                         child: Text(
-                          NumberFormat.currency(
-                                  locale: 'id-ID',
-                                  symbol: 'IDR ',
-                                  decimalDigits: 0)
-                              .format(50000),
+                          (role == "TALENT")
+                              ? widget.userTransaction!.user!.email!
+                              : NumberFormat.currency(
+                                      locale: 'id-ID',
+                                      symbol: 'IDR ',
+                                      decimalDigits: 0)
+                                  .format(50000),
                           style: whiteFontStyl3,
                           textAlign: TextAlign.right,
                         ))
@@ -178,7 +187,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             defaultMargin -
                             5,
                         child: Text(
-                          'Tax 10%',
+                          (role == "TALENT") ? "Phone" : 'Tax 10%',
                           style: greyFontStyle,
                         )),
                     SizedBox(
@@ -186,12 +195,17 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             defaultMargin -
                             5,
                         child: Text(
-                          NumberFormat.currency(
-                                  locale: 'id-ID',
-                                  symbol: 'IDR ',
-                                  decimalDigits: 0)
-                              .format(
-                                  widget.userTransaction!.talent_id!.price! *
+                          (role == "TALENT")
+                              ? (widget.userTransaction!.user!.phone_number !=
+                                      null)
+                                  ? widget.userTransaction!.user!.phone_number!
+                                  : "-"
+                              : NumberFormat.currency(
+                                      locale: 'id-ID',
+                                      symbol: 'IDR ',
+                                      decimalDigits: 0)
+                                  .format(widget
+                                          .userTransaction!.talent_id!.price! *
                                       0.1),
                           style: whiteFontStyl3,
                           textAlign: TextAlign.right,
@@ -268,9 +282,15 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                   UserTransactionStatus.pending)
                               ? "UNPAID"
                               : (widget.userTransaction!.status! ==
-                                      UserTransactionStatus.success)
+                                      UserTransactionStatus.paid)
                                   ? "PAID"
-                                  : "FAILED",
+                                  : (widget.userTransaction!.status! ==
+                                          UserTransactionStatus.delivered)
+                                      ? "DELIVERED"
+                                      : (widget.userTransaction!.status! ==
+                                              UserTransactionStatus.success)
+                                          ? "SUCCESS"
+                                          : "FAILED",
                           style: whiteFontStyl3,
                           textAlign: TextAlign.right,
                         ))
@@ -357,9 +377,23 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         if (widget.userTransaction!.status ==
                             UserTransactionStatus.pending) {
                           await launch(paymentURL);
-                        } else if (widget.userTransaction!.status ==
-                            UserTransactionStatus.success) {
-                          Get.to(() => const TalentVideoPage());
+                        } else if (widget.userTransaction!.status! ==
+                                UserTransactionStatus.paid &&
+                            role == "TALENT") {
+                          Get.to(() => TalentUploadVideo(
+                                userTransaction: widget.userTransaction,
+                              ));
+                        } else if (widget.userTransaction!.status! ==
+                                UserTransactionStatus.delivered &&
+                            role == "TALENT") {
+                          Get.to(() => TalentVideoPage(
+                              userTransaction: widget.userTransaction));
+                        } else if (widget.userTransaction!.status! ==
+                                UserTransactionStatus.delivered ||
+                            widget.userTransaction!.status! ==
+                                UserTransactionStatus.success) {
+                          Get.to(() => TalentVideoPage(
+                              userTransaction: widget.userTransaction));
                         }
                       } else {
                         setState(() {
@@ -400,9 +434,25 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                   UserTransactionStatus.pending)
                               ? "Checkout Now"
                               : (widget.userTransaction!.status! ==
-                                      UserTransactionStatus.success)
-                                  ? "See Video"
-                                  : "Ouch!",
+                                          UserTransactionStatus.paid &&
+                                      role == "TALENT")
+                                  ? "Upload Video"
+                                  : (widget.userTransaction!.status! ==
+                                              UserTransactionStatus.delivered &&
+                                          role == "TALENT")
+                                      ? "See your video"
+                                      : (widget.userTransaction!.status! ==
+                                              UserTransactionStatus.paid)
+                                          ? "Waiting talent"
+                                          : (widget.userTransaction!.status! ==
+                                                      UserTransactionStatus
+                                                          .delivered ||
+                                                  widget.userTransaction!
+                                                          .status! ==
+                                                      UserTransactionStatus
+                                                          .success)
+                                              ? "See Result"
+                                              : "Ouch!",
                           style: whiteFontStyl3.copyWith(
                               fontWeight: FontWeight.bold),
                         ),

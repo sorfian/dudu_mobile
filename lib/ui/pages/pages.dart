@@ -46,3 +46,4 @@ part 'payment_details.dart';
 part 'select_user_page.dart';
 part 'order_details_page.dart';
 part 'talent_video_page.dart';
+part 'talent_upload_video_page.dart';

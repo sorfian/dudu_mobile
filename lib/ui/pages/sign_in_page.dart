@@ -94,9 +94,15 @@ class _SignInPageState extends State<SignInPage> {
 
                     if (state is UserLoaded) {
                       context.read<TalentCubit>().getTalents();
-                      context
-                          .read<UserTransactionsCubit>()
-                          .getUserTransactions();
+                      if (state.user.role == "TALENT") {
+                        context
+                            .read<UserTransactionsCubit>()
+                            .getUserTransactions(user: state.user.role);
+                      } else {
+                        context
+                            .read<UserTransactionsCubit>()
+                            .getUserTransactions();
+                      }
                       Get.offAll(() => const MainPage());
                     } else {
                       Get.snackbar("", "",

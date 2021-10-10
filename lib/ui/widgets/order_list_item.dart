@@ -28,7 +28,7 @@ class OrderListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userTransaction!.talent_id!.type![0],
+                userTransaction!.talent_id!.name!,
                 style: whiteFontStyle2,
                 maxLines: 1,
                 overflow: TextOverflow.clip,
@@ -71,11 +71,26 @@ class OrderListItem extends StatelessWidget {
                               style: GoogleFonts.poppins(
                                   color: '1ABC9C'.toColor(), fontSize: 10),
                             )
-                          : Text(
-                              'On Process',
-                              style: GoogleFonts.poppins(
-                                  color: orangeColor, fontSize: 10),
-                            )
+                          : (userTransaction!.status ==
+                                  UserTransactionStatus.paid)
+                              ? Text(
+                                  'Paid',
+                                  style: GoogleFonts.poppins(
+                                      color: '1ABC9C'.toColor(), fontSize: 10),
+                                )
+                              : (userTransaction!.status ==
+                                      UserTransactionStatus.delivered)
+                                  ? Text(
+                                      'Delivered',
+                                      style: GoogleFonts.poppins(
+                                          color: '1ABC9C'.toColor(),
+                                          fontSize: 10),
+                                    )
+                                  : Text(
+                                      'On Process',
+                                      style: GoogleFonts.poppins(
+                                          color: orangeColor, fontSize: 10),
+                                    )
             ],
           ),
         )

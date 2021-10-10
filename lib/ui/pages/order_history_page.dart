@@ -12,6 +12,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    String role = (context.read<UserCubit>().state as UserLoaded).user.role!;
+
     return BlocBuilder<UserTransactionsCubit, UserTransactionsState>(
         builder: (_, state) {
       if (state is UserTransactionLoaded) {
@@ -32,7 +34,14 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
               MediaQuery.of(context).size.width - 2 * defaultMargin;
           return RefreshIndicator(
             onRefresh: () async {
-              await context.read<UserTransactionsCubit>().getUserTransactions();
+              print(role);
+              (role == "TALENT")
+                  ? await context
+                      .read<UserTransactionsCubit>()
+                      .getUserTransactions(user: "TALENT")
+                  : await context
+                      .read<UserTransactionsCubit>()
+                      .getUserTransactions();
             },
             child: ListView(
               children: [
@@ -51,7 +60,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         children: [
                           Text('Your Orders', style: whiteFontStyle),
                           Text(
-                            'Wait for the best quality',
+                            (role == 'TALENT')
+                                ? 'Send video and earn your money'
+                                : 'Wait for the best quality',
                             style: greyFontStyle.copyWith(
                                 fontWeight: FontWeight.w300),
                           ),
@@ -84,7 +95,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                                 UserTransactionStatus
                                                     .on_process ||
                                             element.status ==
-                                                UserTransactionStatus.pending)
+                                                UserTransactionStatus.pending ||
+                                            element.status ==
+                                                UserTransactionStatus.paid ||
+                                            element.status ==
+                                                UserTransactionStatus.delivered)
                                         .toList()
                                     : state.transactions
                                         .where((element) =>

@@ -12,6 +12,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int selectedPage = 0;
   PageController? pageController;
+  User? user;
 
   @override
   void initState() {

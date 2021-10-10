@@ -17,6 +17,8 @@ class _TalentPageState extends State<TalentPage> {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<UserCubit>().state as UserLoaded;
+        await context.read<TalentCubit>().getTalents();
+        await context.read<UserTransactionsCubit>().getUserTransactions();
       },
       child: ListView(
         children: [
