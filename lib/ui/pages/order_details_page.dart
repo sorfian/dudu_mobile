@@ -247,6 +247,103 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               ],
             ),
           ),
+          //// Order Request
+          Container(
+            margin: const EdgeInsets.only(bottom: defaultMargin),
+            padding: const EdgeInsets.symmetric(
+                horizontal: defaultMargin, vertical: 16),
+            color: darkColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  child: Text(
+                    'Details Request:',
+                    style: whiteFontStyl3,
+                  ),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            defaultMargin -
+                            5,
+                        child: Text(
+                          "Moment",
+                          style: greyFontStyle,
+                        )),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            defaultMargin -
+                            5,
+                        child: Text(
+                          widget.userTransaction!.moment!,
+                          style: whiteFontStyl3,
+                          textAlign: TextAlign.right,
+                        ))
+                  ],
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            defaultMargin -
+                            5,
+                        child: Text(
+                          "Occasion",
+                          style: greyFontStyle,
+                        )),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            defaultMargin -
+                            5,
+                        child: Text(
+                          widget.userTransaction!.occasion!,
+                          style: whiteFontStyl3,
+                          textAlign: TextAlign.right,
+                        ))
+                  ],
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            defaultMargin -
+                            5,
+                        child: Text(
+                          "Instruction",
+                          style: greyFontStyle,
+                        )),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 -
+                            defaultMargin -
+                            5,
+                        child: Text(
+                          widget.userTransaction!.instruction!,
+                          style: whiteFontStyl3,
+                          textAlign: TextAlign.right,
+                        ))
+                  ],
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+              ],
+            ),
+          ),
           //// Order Status
           Container(
             margin: const EdgeInsets.only(bottom: defaultMargin),
